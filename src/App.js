@@ -6,6 +6,7 @@ import Album from './pages/Album';
 import Favorites from './pages/Favorites';
 import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
+import NotFound from './pages/NotFound';
 
 class App extends React.Component {
   render() {
@@ -17,7 +18,7 @@ class App extends React.Component {
         <Route path="/Favorites" component={ Favorites } />
         <Route path="/Profile" component={ Profile } />
         <Route path="/Profile/edit" component={ ProfileEdit } />
-        {/* falta a componente NotFound */}
+        <Route path="*" component={ NotFound } />
       </BrowserRouter>
     );
   }
