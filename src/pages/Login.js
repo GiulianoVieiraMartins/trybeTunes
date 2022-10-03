@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { createUser } from '../services/userAPI';
 
 export default class Login extends Component {
   constructor() {
@@ -35,6 +36,8 @@ export default class Login extends Component {
           name="loginButton"
           type="button"
           disabled={ campoLogin.length < tres }
+          onClick={ createUser({ name: campoLogin }) }
+          // pq o teste não passa a função sendo chamda e onde que essa variavel esta sendo guardada?
         >
           Entrar
 
