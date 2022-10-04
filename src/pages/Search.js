@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import Header from '../components/Header';
-// import searchAlbumsAPI from '../services/searchAlbumsAPI';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import Loading from '../components/Loading';
 
 export default class Search extends Component {
@@ -9,7 +10,9 @@ export default class Search extends Component {
     this.state = {
       pesquisa: '',
       loading: false,
-      // resultadoP: [],
+      resultadoP: [],
+      resultadoVazio: false,
+      artista: '',
     };
   }
 
@@ -20,14 +23,17 @@ export default class Search extends Component {
     });
   };
 
-  // search = () => {
-  //   const { pesquisa } = this.state;
-  //   this.setState({ loading: true });
-  //   searchAlbumsAPI(pesquisa).then((a) => {
-  //     this.setState({ resultadoP: a });
-  //   });
-  //   this.setState({ loading: false });
-  // };
+  search = () => {
+    const { pesquisa, resultadoP } = this.state;
+    this.setState({ loading: true });
+    searchAlbumsAPI(pesquisa).then((a) => {
+      console.log(a);
+      this.setState({ artista: pesquisa, resultadoP: a, loading: false, pesquisa: '' });
+    });
+    if (resultadoP.length === 0) {
+      this.setState({ resultadoVazio: true });
+    }
+  };
 
   // renderPesquisa = () => {
   //   const { pesquisa, resultadoP } = this.state;
@@ -45,7 +51,7 @@ export default class Search extends Component {
 
   render() {
     const { pesquisa,
-      // resultadoP,
+      resultadoP, artista, resultadoVazio,
       loading } = this.state;
     return (
       <>
@@ -66,12 +72,32 @@ export default class Search extends Component {
               data-testid="search-artist-button"
               type="button"
               onClick={ this.search }
+              value={ pesquisa }
             >
               Pesquisar
             </button>
-            {/* {!loading && resultadoP.map((element) => <p>{JSON.stringify(element)}</p>)} */}
-          </div>)}
+            {!loading
+            && resultadoP.length === 0
+            && resultadoVazio && <p>Nenhum álbum foi encontrado</p>}
+            {!loading
+            && resultadoP.length > 0
+            && (
+              <>
+                <p>
+                  {`Resultado de álbuns de: ${artista}`}
+                </p>
+                {resultadoP.map((el, i) => (
+                  <Link
+                    data-testid={ `link-to-album-${el.collectionId}` }
+                    to={ `/album/${el.collectionId}` }
+                    key={ i + el.collectionId }
+                  >
+                    <p key={ i }>{JSON.stringify(el)}</p>
+                  </Link>
+                ))}
 
+              </>)}
+          </div>)}
       </>
     );
   }
