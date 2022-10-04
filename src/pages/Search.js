@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Header from '../Components/Header';
+import Header from '../components/Header';
 // import searchAlbumsAPI from '../services/searchAlbumsAPI';
-import Loading from '../Components/Loading';
+import Loading from '../components/Loading';
 
 export default class Search extends Component {
   constructor() {
