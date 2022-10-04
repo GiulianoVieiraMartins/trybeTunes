@@ -7,8 +7,9 @@ export default class Search extends Component {
   constructor() {
     super();
     this.state = {
-      pesquisa: '', loading: false,
-      // resultadoP: null,
+      pesquisa: '',
+      loading: false,
+      // resultadoP: [],
     };
   }
 
@@ -29,50 +30,49 @@ export default class Search extends Component {
   // };
 
   // renderPesquisa = () => {
-  //   if (resultadoP !== null) {
-  //     (
-  //       <h1>
-  //         Resultado de álbuns de:
-  //         {pesquisa}
-  //       </h1>);
-  //   } else if (resultadoP === []) {
-  //     (
+  //   const { pesquisa, resultadoP } = this.state;
+  //   if (resultadoP.length === 0) {
+  //     return (
   //       <h1>
   //         Nenhum álbum foi encontrado
   //       </h1>);
-  //   }
+  //   } (
+  //     <h1>
+  //       Resultado de álbuns de:
+  //       {pesquisa}
+  //     </h1>);
   // };
-  // porque o header tbm esta carregando junto com a API?
-  // como resolver o problema da segunda renderização condicional?
-  // porque a minha função não esta sendo chamada?
 
   render() {
-    const { pesquisa, loading } = this.state;
+    const { pesquisa,
+      // resultadoP,
+      loading } = this.state;
     return (
-      loading ? (
-        <>
-          <Header />
+      <>
+        <Header />
+        {loading ? (
           <Loading />
-        </>
-      ) : (
-        <div data-testid="page-search">
-          <Header />
-          <input
-            name="pesquisa"
-            data-testid="search-artist-input"
-            onChange={ this.handleChange }
-            value={ pesquisa }
-          />
-          <button
-            disabled={ pesquisa.length < 2 }
-            data-testid="search-artist-button"
-            type="button"
-            onClick={ this.search }
-          >
-            Pesquisar
-          </button>
-          {/* {this.renderPesquisa} */}
-        </div>)
+        ) : (
+          <div data-testid="page-search">
+
+            <input
+              name="pesquisa"
+              data-testid="search-artist-input"
+              onChange={ this.handleChange }
+              value={ pesquisa }
+            />
+            <button
+              disabled={ pesquisa.length < 2 }
+              data-testid="search-artist-button"
+              type="button"
+              onClick={ this.search }
+            >
+              Pesquisar
+            </button>
+            {/* {!loading && resultadoP.map((element) => <p>{JSON.stringify(element)}</p>)} */}
+          </div>)}
+
+      </>
     );
   }
 }
