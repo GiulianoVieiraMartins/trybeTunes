@@ -86,13 +86,13 @@ export default class Search extends Component {
                 <p>
                   {`Resultado de álbuns de: ${artista}`}
                 </p>
-                {resultadoP.map((el, i) => (
+                {resultadoP.map((element, i) => (
                   <Link
-                    data-testid={ `link-to-album-${el.collectionId}` }
-                    to={ `/album/${el.collectionId}` }
-                    key={ i + el.collectionId }
+                    data-testid={ `link-to-album-${element.collectionId}` }
+                    to={ `/album/${element.collectionId}` }
+                    key={ i + element.collectionId }
                   >
-                    <p key={ i }>{JSON.stringify(el)}</p>
+                    <p key={ i }>{JSON.stringify(element)}</p>
                   </Link>
                 ))}
 
