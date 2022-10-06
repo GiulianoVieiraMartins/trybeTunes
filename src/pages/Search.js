@@ -27,7 +27,7 @@ export default class Search extends Component {
     const { pesquisa, resultadoP } = this.state;
     this.setState({ loading: true });
     searchAlbumsAPI(pesquisa).then((a) => {
-      console.log(a);
+      // console.log(a);
       this.setState({ artista: pesquisa, resultadoP: a, loading: false, pesquisa: '' });
     });
     if (resultadoP.length === 0) {
