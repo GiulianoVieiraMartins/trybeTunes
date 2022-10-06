@@ -10,8 +10,9 @@ export default class Album extends Component {
   constructor() {
     super();
     this.state = {
-      retornoAPI: [],
+      musicas: [],
       loading: false,
+      favoritas: [],
     };
   }
 
@@ -19,24 +20,21 @@ export default class Album extends Component {
     const { match } = this.props;
     const { id } = match.params;
     const data = await getMusics(id);
-    this.setState({ retornoAPI: data });
-    // console.log(this.state.retornoAPI[0].artistName);
+    this.setState({ musicas: data });
+    const faves = await getFavoriteSongs();
+    this.setState({ favoritas: faves, loading: false });
   }
 
   handleFaves = async ({ target }) => {
     this.setState({ loading: true });
-    // console.log(target.id);
     const obj = await getMusics(target.id);
     await addSong(obj[0]);
-    console.log(obj);
-    // this.setState((prev) => ({ favoritas: [...prev.favoritas, data] }));
-    await getFavoriteSongs();
-    // console.log(music);
-    this.setState({ loading: false });
+    const faves = await getFavoriteSongs();
+    this.setState({ favoritas: faves, loading: false });
   };
 
   render() {
-    const { retornoAPI, loading } = this.state;
+    const { musicas, loading, favoritas } = this.state;
     // const { match } = this.props;
     // const { id } = match.params;
     if (loading) return <Loading />;
@@ -44,11 +42,12 @@ export default class Album extends Component {
       <div data-testid="page-album">
         <Header />
         <p data-testid="artist-name">
-          {retornoAPI[0]?.artistName}
+          {musicas[0]?.artistName}
         </p>
-        <p data-testid="album-name">{retornoAPI[0]?.collectionName}</p>
-        { retornoAPI.filter((el, _i, arr) => el !== arr[0])
+        <p data-testid="album-name">{musicas[0]?.collectionName}</p>
+        { musicas.filter((el, _i, arr) => el !== arr[0])
           .map((element, index) => (<MusicCard
+            favoritas={ favoritas }
             handleFaves={ this.handleFaves }
             trackName={ element.trackName }
             previewUrl={ element.previewUrl }
