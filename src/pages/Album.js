@@ -11,33 +11,50 @@ export default class Album extends Component {
     super();
     this.state = {
       musicas: [],
+      faves: [],
       loading: false,
-      favoritas: [],
     };
   }
 
   async componentDidMount() {
+    this.setState({ loading: true });
+    const faveSongs = await getFavoriteSongs();
+    this.setState({ faves: faveSongs, loading: false });
     const { match } = this.props;
-    const { id } = match.params;
+    const { params } = match;
+    const { id } = params;
     const data = await getMusics(id);
-    this.setState({ musicas: data });
-    const faves = await getFavoriteSongs();
-    this.setState({ favoritas: faves, loading: false });
+    const dataFiltrada = data.filter((_element, index) => index > 0);
+    this.setState({ musicas: dataFiltrada });
   }
 
+  // func = async (trackId) => {
+  //   const faves = await getFavoriteSongs();
+  //   const isFavorite = await faves.some((element) => element.trackId === (trackId));
+  //   // const isFavorite = faves.some((element) => console.log(element.trackId === (trackId), element.trackId, trackId));
+  //   // console.log(isFavorite);
+  //   return isFavorite;
+  //   // ? this.setState({ checkBox: true })
+  //   // : this.setState({ checkBox: false });
+  // };
+
   handleFaves = async ({ target }) => {
-    this.setState({ loading: true });
-    const obj = await getMusics(target.id);
-    await addSong(obj[0]);
-    const faves = await getFavoriteSongs();
-    this.setState({ favoritas: faves, loading: false });
+    const { musicas } = this.state;
+    const musicId = target.id;
+    const obj = musicas.filter((element) => element.trackId === Number(musicId));
+    const objeto = obj[0];
+    console.log(objeto);
+    if (target.checked) {
+      this.setState({ loading: true });
+      await addSong(objeto);
+      this.setState((prev) => ({
+        faves: [...prev.faves, objeto], loading: false,
+      }));
+    } else console.log('removeu');
   };
 
   render() {
-    const { musicas, loading, favoritas } = this.state;
-    // const { match } = this.props;
-    // const { id } = match.params;
-    if (loading) return <Loading />;
+    const { musicas, loading, faves } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -45,15 +62,23 @@ export default class Album extends Component {
           {musicas[0]?.artistName}
         </p>
         <p data-testid="album-name">{musicas[0]?.collectionName}</p>
-        { musicas.filter((el, _i, arr) => el !== arr[0])
-          .map((element, index) => (<MusicCard
-            favoritas={ favoritas }
-            handleFaves={ this.handleFaves }
-            trackName={ element.trackName }
-            previewUrl={ element.previewUrl }
-            key={ index }
-            trackId={ element.trackId }
-          />))}
+        {loading ? <Loading /> : (
+          <div>
+            { musicas
+              .map(
+                (element) => (
+                  (<MusicCard
+                    checkBox={ faves
+                      .some((elemento) => elemento.trackId === (element.trackId)) }
+                    handleFaves={ this.handleFaves }
+                    trackName={ element.trackName }
+                    previewUrl={ element.previewUrl }
+                    key={ element.trackId }
+                    trackId={ element.trackId }
+                  />)
+                ),
+              )}
+          </div>)}
       </div>
     );
   }

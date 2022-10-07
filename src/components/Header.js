@@ -24,7 +24,7 @@ export default class Header extends Component {
     const { nomeLogin, loading } = this.state;
     return (
       <header data-testid="header-component">
-        <p data-testid="header-user-name">{loading ? <Loading /> : nomeLogin}</p>
+        <div data-testid="header-user-name">{loading ? <Loading /> : nomeLogin}</div>
         <nav>
           <Link data-testid="link-to-favorites" to="/favorites">Favorites</Link>
           <Link data-testid="link-to-search" to="/search">Search</Link>
